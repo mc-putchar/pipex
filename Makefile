@@ -18,7 +18,7 @@ SRCDIR := srcs
 INCDIR := includes
 LIBDIR := lib
 #----- ----------- -----
-FILES := $(addprefix $(SRCDIR)/, pipex.c ft_getpaths.c)
+FILES := $(addprefix $(SRCDIR)/, pipex.c ft_getpaths.c ft_validatecmd.c)
 OBJS := $(FILES:%.c=%.o)
 #----- ----------- -----
 LIBFTPRINTF := $(LIBDIR)/libftprintf.a
