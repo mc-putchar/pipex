@@ -6,7 +6,7 @@
 /*   By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 23:22:53 by mcutura           #+#    #+#             */
-/*   Updated: 2023/05/13 23:22:55 by mcutura          ###   ########.fr       */
+/*   Updated: 2023/05/27 01:06:25 by mcutura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,3 @@ char	*ft_printf_uhex(t_format *fmt)
 	}
 	return (fmt->out);
 }
-
