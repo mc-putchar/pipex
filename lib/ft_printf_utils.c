@@ -6,7 +6,7 @@
 /*   By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:21:50 by mcutura           #+#    #+#             */
-/*   Updated: 2023/05/13 22:21:52 by mcutura          ###   ########.fr       */
+/*   Updated: 2023/05/27 01:06:09 by mcutura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_print(const char *str, int s, int e, int fd)
 		printed = write(fd, str + s, e - s);
 		if (printed == -1)
 			continue ;
-		remain = e - s - printed;		
+		remain = e - s - printed;
 		ret += printed;
 		s += printed;
 	}

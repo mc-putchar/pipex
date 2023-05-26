@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
@@ -6,43 +6,11 @@
 /*   By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 18:24:48 by mcutura           #+#    #+#             */
-/*   Updated: 2023/05/27 00:27:56 by mcutura          ###   ########.fr       */
+/*   Updated: 2023/05/27 01:11:28 by mcutura          ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "pipex.h"
-
-t_cmd	*check_path(t_cmd *cmd, const char *path)
-{
-	cmd->path = ft_strjoin(path, cmd->args[0]);
-	if (!cmd->path)
-		return (NULL);
-	if (!access(cmd->path, X_OK))
-		return (cmd);
-	free(cmd->path);
-	cmd->path = NULL;
-	return (NULL);
-}
-
-t_cmd	*validate_cmd(const char *bin, char **paths)
-{
-	int		i;
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->args = ft_split(bin, ' '); // TODO handle quotes (strtok?)
-	if (!cmd->args)
-		return (free(cmd), NULL);
-	if ((cmd->args[0][0] == '/' || cmd->args[0][0] == '.') && check_path(cmd, ""))
-		return (cmd);
-	i = 0;
-	while (paths[i])
-		if (check_path(cmd, paths[i++]))
-			return (cmd);
-	return (free(cmd->args), free(cmd), NULL);
-}
 
 void	pipexin(int pfd[2], t_pipex *px, int cmdn, char *const *envp)
 {
@@ -55,7 +23,7 @@ void	pipexin(int pfd[2], t_pipex *px, int cmdn, char *const *envp)
 	if (dup2(px->infd, STDIN_FILENO) == -1)
 		exit(EXIT_FAILURE);
 	close(px->infd);
-	cmd = validate_cmd(px->cmds[cmdn], px->paths);
+	cmd = ft_validatecmd(px->cmds[cmdn], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
 	ft_fprintf(STDERR_FILENO, "pipex: %s: %s\n", \
@@ -74,7 +42,7 @@ void	pipexout(int pfd[2], t_pipex *px, int cmdn, char *const *envp)
 	if (dup2(px->outfd, STDOUT_FILENO) == -1)
 		exit(EXIT_FAILURE);
 	close(px->outfd);
-	cmd = validate_cmd(px->cmds[cmdn], px->paths);
+	cmd = ft_validatecmd(px->cmds[cmdn], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
 	ft_fprintf(STDERR_FILENO, "pipex: %s: %s\n", \
@@ -113,25 +81,27 @@ int	main(int ac, char **av, char *const *envp)
 	t_pipex	*px;
 
 	if (ac < 5)
-		return (ft_fprintf(STDERR_FILENO, "Usage: %s %s\n", av[0], USAGE));
+		return (ft_fprintf(STDERR_FILENO, "Usage: %s %s\n", av[0], USAGE), 1);
 	px = malloc(sizeof(t_pipex));
 	if (!px)
 		return (ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], strerror(errno)));
 	px->infd = open(av[1], O_RDONLY);
 	if (px->infd == -1)
 		return (ft_fprintf(STDERR_FILENO, "%s: %s: %s\n", \
-		av[0], strerror(errno), av[1]));
+		av[0], strerror(errno), av[1]), EXIT_FAILURE);
 	px->outfd = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (px->outfd == -1)
 		return (ft_fprintf(STDERR_FILENO, "%s: %s: %s\n", \
-		av[0], strerror(errno), av[ac - 1]));
+		av[0], strerror(errno), av[ac - 1]), EXIT_FAILURE);
 	px->paths = ft_getpaths(envp);
 	if (!px->paths)
 		return (free(px), ft_fprintf(STDERR_FILENO, "%s: %s\n", \
-		av[0], strerror(errno)));
+		av[0], strerror(errno)), EXIT_FAILURE);
 	px->ncmds = ac - 3;
 	px->cmds = av + 2;
 	if (pipex(px, envp))
-		ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], strerror(errno));
-	return (close(px->infd) && close(px->outfd), free(px->paths), free(px), 0);
+		return (close(px->infd), close(px->outfd), free(px->paths), free(px), \
+		ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], strerror(errno)), 1);
+	return (close(px->infd), close(px->outfd), free(px->paths), free(px), 0);
 }
+
