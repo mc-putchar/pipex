@@ -24,7 +24,6 @@ static t_cmd	*check_path(t_cmd *cmd, const char *path)
 	return (NULL);
 }
 
-// TODO handle quotes in bin (with strtok?)
 t_cmd	*ft_validatecmd(const char *bin, char **paths)
 {
 	int		i;
@@ -33,7 +32,7 @@ t_cmd	*ft_validatecmd(const char *bin, char **paths)
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmd->args = ft_split(bin, ' ');
+	cmd->args = ft_split_blocks(bin, ' ', "\"\'");
 	if (!cmd->args)
 		return (free(cmd), NULL);
 	if ((cmd->args[0][0] == '/' || cmd->args[0][0] == '.') &&

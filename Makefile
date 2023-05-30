@@ -18,11 +18,12 @@ SRCDIR := srcs
 INCDIR := includes
 LIBDIR := lib
 #----- ----------- -----
-FILES := $(addprefix $(SRCDIR)/, pipex.c ft_getpaths.c ft_validatecmd.c)
+FILES := $(addprefix $(SRCDIR)/, main.c pipex.c ft_getpaths.c ft_heredoc.c \
+ft_validatecmd.c ft_parenting.c)
 OBJS := $(FILES:%.c=%.o)
 #----- ----------- -----
 LIBFTPRINTF := $(LIBDIR)/libftprintf.a
-HEADERS := $(addprefix $(INCDIR)/, pipex.h libft.h ft_printf.h)
+HEADERS := $(addprefix $(INCDIR)/, pipex.h libft.h ft_printf.h get_next_line.h)
 #----- ----------- -----
 CFLAGS := -Wall -Wextra -Werror -I$(INCDIR)
 DEBUGFLAGS := -ggdb3 -D DEBUG=1
@@ -41,6 +42,7 @@ $(LIBFTPRINTF):
 $(HEADERS):
 	cp $(LIBDIR)/ft_printf.h $(INCDIR)/ft_printf.h
 	cp $(LIBDIR)/libft/libft.h $(INCDIR)/libft.h
+	cp $(LIBDIR)/get_next_line.h $(INCDIR)/get_next_line.h
 
 clean:
 	$(RM) $(OBJS)

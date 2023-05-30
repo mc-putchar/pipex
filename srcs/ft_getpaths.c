@@ -46,3 +46,13 @@ char	**ft_getpaths(char *const *envp)
 	}
 	return (paths);
 }
+
+void	free_paths(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i])
+		free(paths[i++]);
+	free(paths);
+}

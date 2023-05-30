@@ -12,10 +12,10 @@
 
 NAME := libftprintf.a
 LIBFT := libft/libft.a
-FILES := ft_printf.c ft_printf_utils.c ft_printf_converters.c \
-		ft_printf_converters_hex.c ft_printf_handle_flags.c
+FILES := ft_printf.c ft_printf_utils.c ft_printf_converters.c get_next_line.c\
+	ft_printf_converters_hex.c ft_printf_handle_flags.c get_next_line_utils.c
 OBJS := $(FILES:%.c=%.o)
-HEADERS := ft_printf.h libft/libft.h
+HEADERS := ft_printf.h libft/libft.h get_next_line.h
 CFLAGS := -Wall -Wextra -Werror
 ARFLAGS := rcs
 
@@ -33,10 +33,12 @@ bonus: $(NAME)
 
 clean:
 	$(RM) $(OBJS)
+	$(RM) libft.h
 	$(MAKE) -C libft clean
 
 fclean:
 	$(RM) $(OBJS)
+	$(RM) libft.h
 	$(RM) $(NAME)
 	$(MAKE) -C libft fclean
 
