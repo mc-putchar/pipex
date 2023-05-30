@@ -49,7 +49,7 @@ void	malcolm(t_pipex *px, int n, char *const *envp)
 		exit(EXIT_FAILURE);
 	if (closeallfds(px))
 		exit(EXIT_FAILURE);
-	cmd = ft_validatecmd(px->cmds[px->ncmds - 1], px->paths);
+	cmd = ft_validatecmd(px->cmds[n], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
 	ft_fprintf(STDERR_FILENO, "pipex: %s: %s\n", px->cmds[n], NO_CMD);

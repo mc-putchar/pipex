@@ -12,96 +12,100 @@
 
 #include "libft.h"
 
-static int	blckchckr(int blck, int *wrd, const char *s, const char *blckrs)
+static char	*get_next_block(const char *s, char c, int i, const char *blockers)
 {
-	if (blck)
+	int		start;
+	int		end;
+	int		in_block;
+
+	start = 0;
+	end = 0;
+	in_block = 0;
+	while (s[end])
 	{
-		if (*(ft_strchr(blckrs, *s)) == blck)
-			return (++(*wrd), 0);
-		return (++(*wrd), blck);
+		if (s[end] == c && !in_block)
+		{
+			if (!i--)
+				break ;
+			start = end + 1;
+		}
+		else if (ft_strchr(blockers, s[end]))
+			in_block = !in_block;
+		++end;
 	}
-	if (!blck && ft_strchr(blckrs, *s))
-		return (++(*wrd), (int)*(ft_strchr(blckrs, *s)));
-	++(*wrd);
-	return (0);
+	if (!end)
+		return (NULL);
+	if (ft_strchr(blockers, s[start]) && ++start && --end)
+		;
+	return (ft_substr(s, start, end - start));
 }
 
-static int	count_blocks(const char *s, char c, const char *blockers)
+int	ft_count_blocks(const char *s, char c, const char *blockers)
 {
 	int	count;
-	int	block;
-	int	word;
+	int	i;
+	int	in_block;
 
 	count = 0;
-	block = 0;
-	word = 0;
-	while (*s)
+	i = 0;
+	in_block = 0;
+	while (s[i])
 	{
-		if (*s++ != c)
-		{
-			block = blckchckr(block, &word, s - 1, blockers);
-			continue ;
-		}
-		if (!block && word)
-		{
-			++count;
-			word = 0;
-		}
-		else
-			++word;
+		if (s[i] == c && !in_block)
+			count++;
+		else if (ft_strchr(blockers, s[i]))
+			in_block = !in_block;
+		i++;
 	}
-	if (!block && word)
-		++count;
+	if (i > 0 && s[i - 1] != c)
+		count++;
 	return (count);
-}
-
-static void	*gtfo(char **spl, int i)
-{
-	while (i--)
-		free(spl[i]);
-	free(spl);
-	return (NULL);
-}
-
-static int	get_block(char **spl, const char *s, int *word)
-{
-	if (*word)
-	{
-		*spl = ft_substr(s - *word, 0, *word);
-		if (!*spl)
-			return (EXIT_FAILURE);
-		*word = 0;
-	}
-	else
-		++(*word);
-	return (EXIT_SUCCESS);
 }
 
 char	**ft_split_blocks(const char *s, char c, const char *blockers)
 {
 	char	**spl;
 	int		count;
-	int		block;
-	int		word;
 	int		i;
 
-	count = count_blocks(s, c, blockers);
+	count = ft_count_blocks(s, c, blockers);
 	spl = malloc(sizeof(char *) * (count + 1));
 	if (!spl)
 		return (NULL);
-	block = 0;
-	word = 0;
 	i = 0;
 	while (i < count)
 	{
-		if ((*s++ == c || !*(s - 1)) && !block)
+		spl[i] = get_next_block(s, c, i, blockers);
+		if (!spl[i++])
 		{
-			if (get_block(&spl[i++], s - 1, &word))
-				return (gtfo(spl, i - 1));
+			while (i-- - 1)
+				free(spl[i]);
+			free(spl);
+			return (NULL);
 		}
-		else
-			block = blckchckr(block, &word, s - 1, blockers);
 	}
 	spl[i] = NULL;
 	return (spl);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char *s = "hello world sed -e 's/abc/def/g' -e 's/123/456/g'";
+	char **spl = ft_split_blocks(s, ' ', "'\"");
+	if (!spl)
+		return (1);
+	int i = 0;
+	while (spl[i])
+	{
+		printf("%s\n", spl[i++]);
+	}
+	while (i--)
+	{
+		free(spl[i]);
+	}
+	free(spl);
+	return (0);
+}
+*/
