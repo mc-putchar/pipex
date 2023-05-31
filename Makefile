@@ -6,7 +6,7 @@
 #    By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/23 14:52:15 by mcutura           #+#    #+#              #
-#    Updated: 2023/05/27 00:13:37 by mcutura          ###   ########.fr        #
+#    Updated: 2023/05/30 19:01:47 by mcutura          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -36,6 +36,8 @@ all: $(NAME)
 $(NAME): $(HEADERS) $(LIBFTPRINTF) $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS) $(LDLIBS) 
 
+bonus: $(NAME)
+
 $(LIBFTPRINTF):
 	$(MAKE) -C $(LIBDIR) all
 
@@ -46,11 +48,17 @@ $(HEADERS):
 
 clean:
 	$(RM) $(OBJS)
+	$(RM) $(INCDIR)/libft.h
+	$(RM) $(INCDIR)/ft_printf.h
+	$(RM) $(INCDIR)/get_next_line.h
 	$(MAKE) -C $(LIBDIR) clean
 
 fclean:
 	$(RM) $(OBJS)
 	$(RM) $(NAME)
+	$(RM) $(INCDIR)/libft.h
+	$(RM) $(INCDIR)/ft_printf.h
+	$(RM) $(INCDIR)/get_next_line.h
 	$(MAKE) -C $(LIBDIR) fclean
 
 re: fclean all
