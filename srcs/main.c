@@ -23,7 +23,8 @@ int	main(int ac, char **av, char *const *envp)
 		return (ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], \
 		strerror(errno)), EXIT_FAILURE);
 	if (pipex(px, envp))
-		return (ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], \
-		strerror(errno)), EXIT_FAILURE);
+		ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], strerror(errno));
+	if (px->limiter)
+		unlink(HEREDOC);
 	return (EXIT_SUCCESS);
 }
