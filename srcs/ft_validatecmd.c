@@ -24,6 +24,24 @@ static t_cmd	*check_path(t_cmd *cmd, const char *path)
 	return (NULL);
 }
 
+void	free_cmd(t_cmd *cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	if (cmd->path)
+		free(cmd->path);
+	if (cmd->args)
+	{
+		i = 0;
+		while (cmd->args[i])
+			free(cmd->args[i++]);
+		free(cmd->args);
+	}
+	free(cmd);
+}
+
 t_cmd	*ft_validatecmd(const char *bin, char **paths)
 {
 	int		i;
@@ -34,13 +52,15 @@ t_cmd	*ft_validatecmd(const char *bin, char **paths)
 		return (NULL);
 	cmd->args = ft_split_blocks(bin, ' ', "\"\'");
 	if (!cmd->args)
-		return (free(cmd), NULL);
+		return (NULL);
 	if ((cmd->args[0][0] == '/' || cmd->args[0][0] == '.') &&
 		check_path(cmd, ""))
 		return (cmd);
+	if (!paths)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 		if (check_path(cmd, paths[i++]))
 			return (cmd);
-	return (free(cmd->args), free(cmd), NULL);
+	return (NULL);
 }

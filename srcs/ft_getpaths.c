@@ -12,45 +12,42 @@
 
 #include "pipex.h"
 
-/*
-** Returns an array of strings containing the paths from the PATH environment
-** variable with '/' appended. The array must be freed by the caller.
-** @param envp: the environment variables
-** @return: an array of strings containing the paths from the PATH environment
-*/
-char	**ft_getpaths(char *const *envp)
+// should ft_strnstr be used here? 
+int	ft_getpaths(char *const *envp, char ***ppaths)
 {
-	char	*path;
 	char	**paths;
+	char	*path;
 	int		i;
 
 	path = NULL;
 	i = 0;
+	if (!envp)
+		return (NO_ENVP);
 	while (!path && *envp)
 		path = ft_strnstr(*envp++, "PATH=", 5);
-	if (path)
-		paths = ft_split(path + 5, ':');
-	if (!path || !paths)
-		return (NULL);
+	if (!path)
+		return (1);
+	paths = ft_split(path + 5, ':');
+	if (!paths)
+		return (1);
 	while (paths[i])
 	{
 		path = ft_strjoin(paths[i], "/");
-		free(paths[i]);
 		if (!path)
-		{
-			while (i--)
-				free(paths[i]);
-			return (free(paths), NULL);
-		}
+			return (free_paths(paths), 1);
+		free(paths[i]);
 		paths[i++] = path;
 	}
-	return (paths);
+	*ppaths = paths;
+	return (0);
 }
 
 void	free_paths(char **paths)
 {
 	int	i;
 
+	if (!paths)
+		return ;
 	i = 0;
 	while (paths[i])
 		free(paths[i++]);

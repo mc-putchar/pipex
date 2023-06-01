@@ -12,19 +12,25 @@
 
 #include "pipex.h"
 
-int	main(int ac, char **av, char *const *envp)
+int	main(int ac, const char **av, char *const *envp)
 {
 	t_pipex	*px;
+	int		err;
 
 	if (ac < 5)
-		return (ft_fprintf(STDERR_FILENO, "Usage: %s %s\n", av[0], USAGE), 1);
-	px = init_pipex(ac, av, envp);
+		return (error_handler(NULL, av[0], TOO_FEW_ARGS, NULL));
+	errno = 0;
+	px = malloc(sizeof(t_pipex));
 	if (!px)
-		return (ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], \
-		strerror(errno)), EXIT_FAILURE);
-	if (pipex(px, envp))
-		ft_fprintf(STDERR_FILENO, "%s: %s\n", av[0], strerror(errno));
-	if (px->limiter)
-		unlink(HEREDOC);
+		return (error_handler(NULL, av[0], MALLOC_FAIL, NULL));
+	errno = 0;
+	err = init_pipex(ac, av, envp, px);
+	if (err)
+		return (error_handler(px, av[0], err, NULL));
+	errno = 0;
+	err = pipex(px, envp);
+	if (err)
+		return (error_handler(px, av[0], err, NULL));
+	free_pipex(px);
 	return (EXIT_SUCCESS);
 }

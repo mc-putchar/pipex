@@ -19,7 +19,7 @@ INCDIR := includes
 LIBDIR := lib
 #----- ----------- -----
 FILES := $(addprefix $(SRCDIR)/, main.c pipex.c ft_getpaths.c ft_heredoc.c \
-ft_validatecmd.c ft_parenting.c)
+ft_validatecmd.c ft_parenting.c error_handling.c)
 OBJS := $(FILES:%.c=%.o)
 #----- ----------- -----
 LIBFTPRINTF := $(LIBDIR)/libftprintf.a
@@ -64,7 +64,6 @@ fclean:
 re: fclean all
 
 debug: $(HEADERS) $(LIBFTPRINTF) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS) $(LDLIBS) \
-	$(DEBUGFLAGS)
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS) $(LDLIBS)
 
 .PHONY: all clean fclean re debug
