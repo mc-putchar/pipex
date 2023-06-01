@@ -25,7 +25,6 @@ static int	read_heredoc(t_pipex *px)
 		return (error_handler(px, px->this, OPEN_FAIL, HEREDOC));
 	while (1)
 	{
-		ft_printf("pipex heredoc> ");
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			return (close(fd), READ_FAIL);

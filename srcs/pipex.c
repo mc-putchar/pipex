@@ -37,8 +37,8 @@ int	init_pipex(int ac, const char **av, char *const *envp, t_pipex *px)
 	if (pipe(px->pd[0]) == -1 || pipe(px->pd[1]) == -1)
 		return (free_pipex(px), PIPE_FAIL);
 	if (!av[1] || av[1][0] == '<' || av[1][0] == '-' ||
-	!ft_strncmp(av[1], "here-doc", 9) || !ft_strncmp(av[1], "heredoc", 8) ||
-	!ft_strncmp(av[1], "heredoc", 8) || !ft_strncmp(av[1], "here_doc", 9))
+	!ft_memcmp(av[1], "here-doc\0", 10) || !ft_memcmp(av[1], "heredoc\0", 9) ||
+	!ft_memcmp(av[1], "heredoc\0", 9) || !ft_memcmp(av[1], "here_doc\0", 10))
 		return (ft_heredoc(px, ac, av));
 	px->limiter = NULL;
 	px->infd = open(av[1], O_RDONLY);
