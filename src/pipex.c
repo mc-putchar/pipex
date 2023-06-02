@@ -28,25 +28,18 @@ void	free_pipex(t_pipex *px)
 
 int	init_pipex(int ac, const char **av, char *const *envp, t_pipex *px)
 {
-	if (!px)
-		return (MALLOC_FAIL);
 	px->this = av[0];
 	px->paths = NULL;
 	if (ft_getpaths(envp, &px->paths))
 		return (MALLOC_FAIL);
 	if (pipe(px->pd[0]) == -1 || pipe(px->pd[1]) == -1)
-		return (free_pipex(px), PIPE_FAIL);
-	if (!av[1] || av[1][0] == '<' || av[1][0] == '-' ||
-	!ft_memcmp(av[1], "here-doc\0", 10) || !ft_memcmp(av[1], "heredoc\0", 9) ||
-	!ft_memcmp(av[1], "heredoc\0", 9) || !ft_memcmp(av[1], "here_doc\0", 10))
+		return (PIPE_FAIL);
+	if (!av[1] || av[1][0] == '-' || !ft_memcmp(av[1], "<<", 3) ||
+	!ft_memcmp(av[1], "here_doc", 9))
 		return (ft_heredoc(px, ac, av));
 	px->limiter = NULL;
-	px->infd = open(av[1], O_RDONLY);
-	if (px->infd < 0)
-		return (error_handler(px, av[0], OPEN_FAIL, av[1]));
-	px->outfd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (px->outfd < 0)
-		return (error_handler(px, av[0], OPEN_FAIL, av[ac - 1]));
+	px->infile = av[1];
+	px->outfile = av[ac - 1];
 	px->ncmds = ac - 3;
 	px->cmds = av + 2;
 	return (EXIT_SUCCESS);

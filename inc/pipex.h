@@ -29,20 +29,21 @@
 
 # define USAGE "[file1 | here_doc LIMITER] cmd1 cmd2 ... cmdN file2"
 # define NO_CMD "command not found"
-# define NO_ENVP 0 // change to 1 to refuse to run without envp
-# define MALLOC_FAIL 42
-# define OPEN_FAIL 2
-# define CLOSE_FAIL 3
-# define FORK_FAIL 4
-# define PIPE_FAIL 5
-# define DUP_FAIL 6
-# define EXECVE_FAIL 7
-# define WRITE_FAIL 8
-# define READ_FAIL 9
-# define TOO_FEW_ARGS 10
-# define WAIT_FAIL 11
-# define ARGS_FAIL 12
 # define HEREDOC ".temp_pipex_heredoc_file"
+# define MAX_PATH_SIZE		1024
+# define NO_ENVP			0 // change to 1 to refuse to run without envp
+# define MALLOC_FAIL		42
+# define OPEN_FAIL			2
+# define CLOSE_FAIL			3
+# define FORK_FAIL			4
+# define PIPE_FAIL			5
+# define DUP_FAIL			6
+# define EXECVE_FAIL		7
+# define WRITE_FAIL			8
+# define READ_FAIL			9
+# define TOO_FEW_ARGS		10
+# define WAIT_FAIL			11
+# define ARGS_FAIL			12
 
 typedef struct s_cmd
 {
@@ -55,6 +56,8 @@ typedef struct s_pipex
 	char const	*this;
 	int			ncmds;
 	int			infd;
+	char const	*infile;
+	char const	*outfile;
 	int			outfd;
 	int			pd[2][2];
 	char const	**cmds;
@@ -69,12 +72,13 @@ int		init_pipex(int ac, const char **av, char *const *envp, t_pipex *px);
 int		pipex(t_pipex *px, char *const *envp);
 
 int		parenting_is_hard(t_pipex *px, int *pid, int i, char *const *envp);
-void	child_firstborn(t_pipex *px, char *const *envp);
-void	malcolm(t_pipex *px, int n, char *const *envp);
-void	child_last(t_pipex *px, char *const *envp);
+void	child_firstborn(t_pipex *px, char *const *envp, int *pid);
+void	malcolm(t_pipex *px, int n, char *const *envp, int *pid);
+void	child_last(t_pipex *px, char *const *envp, int *pid);
 int		closeallfds(t_pipex *px);
 
 int		ft_getpaths(char *const *envp, char ***ppaths);
+char	*ft_getfilepath(char const *path);
 void	free_paths(char **paths);
 
 t_cmd	*ft_validatecmd(const char *bin, char **paths);

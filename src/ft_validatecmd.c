@@ -52,15 +52,15 @@ t_cmd	*ft_validatecmd(const char *bin, char **paths)
 		return (NULL);
 	cmd->args = ft_split_blocks(bin, ' ', "\"\'");
 	if (!cmd->args)
-		return (NULL);
+		return (free_cmd(cmd), NULL);
 	if ((cmd->args[0][0] == '/' || cmd->args[0][0] == '.') &&
 		check_path(cmd, ""))
 		return (cmd);
 	if (!paths)
-		return (NULL);
+		return (free_cmd(cmd), NULL);
 	i = 0;
 	while (paths[i])
 		if (check_path(cmd, paths[i++]))
 			return (cmd);
-	return (NULL);
+	return (free_cmd(cmd), NULL);
 }

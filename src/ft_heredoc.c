@@ -44,12 +44,8 @@ int	ft_heredoc(t_pipex *px, int ac, const char **av)
 	err = read_heredoc(px);
 	if (err)
 		return (error_handler(px, px->this, err, HEREDOC));
-	px->infd = open(HEREDOC, O_RDONLY);
-	if (px->infd < 0)
-		return (error_handler(px, px->this, OPEN_FAIL, HEREDOC));
-	px->outfd = open(av[ac - 1], O_APPEND | O_WRONLY);
-	if (px->outfd < 0)
-		return (error_handler(px, px->this, OPEN_FAIL, av[ac - 1]));
+	px->infile = HEREDOC;
+	px->outfile = av[ac - 1];
 	px->ncmds = ac - 4;
 	px->cmds = av + 3;
 	return (EXIT_SUCCESS);
