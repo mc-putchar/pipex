@@ -35,10 +35,10 @@ void	child_firstborn(t_pipex *px, char *const *envp, int *pid)
 	cmd = ft_validatecmd(px->cmds[0], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
-	ft_fprintf(STDERR_FILENO, "%s: %s: %s\n", px->this, px->cmds[0], NO_CMD);
+	else
+		error_handler(px, px->this, CMD_FAIL, px->cmds[0]);
 	free_cmd(cmd);
-	free_pipex(px);
-	exit(EXECVE_FAIL);
+	error_handler(px, px->this, EXECVE_FAIL, NULL);
 }
 
 void	malcolm(t_pipex *px, int n, char *const *envp, int *pid)
@@ -55,10 +55,10 @@ void	malcolm(t_pipex *px, int n, char *const *envp, int *pid)
 	cmd = ft_validatecmd(px->cmds[n], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
-	ft_fprintf(STDERR_FILENO, "%s: %s: %s\n", px->this, px->cmds[n], NO_CMD);
+	else
+		error_handler(px, px->this, CMD_FAIL, px->cmds[n]);
 	free_cmd(cmd);
-	free_pipex(px);
-	exit(EXECVE_FAIL);
+	error_handler(px, px->this, EXECVE_FAIL, NULL);
 }
 
 void	child_last(t_pipex *px, char *const *envp, int *pid)
@@ -81,12 +81,10 @@ void	child_last(t_pipex *px, char *const *envp, int *pid)
 	cmd = ft_validatecmd(px->cmds[px->ncmds - 1], px->paths);
 	if (cmd)
 		execve(cmd->path, cmd->args, envp);
-	ft_fprintf(STDERR_FILENO, "%s: %s: %s\n", px->this, \
-	px->cmds[px->ncmds - 1], NO_CMD);
+	else
+		error_handler(px, px->this, CMD_FAIL, px->cmds[px->ncmds - 1]);
 	free_cmd(cmd);
 	error_handler(px, px->this, EXECVE_FAIL, NULL);
-	free_pipex(px);
-	exit(EXECVE_FAIL);
 }
 
 int	parenting_is_hard(t_pipex *px, int *pid, int i, char *const *envp)

@@ -61,14 +61,14 @@ int	pipex(t_pipex *px, char *const *envp)
 		return (free(pids), err);
 	if (closeallfds(px))
 		return (free(pids), CLOSE_FAIL);
-	while (i++ <= px->ncmds)
+	i = -1;
+	status = 0;
+	while (++i < px->ncmds)
 	{
-		if (waitpid(pids[px->ncmds - i], &status, 0)
-			&& WIFEXITED(status) && WEXITSTATUS(status))
-		{
-			free(pids);
-			error_handler(px, px->this, WEXITSTATUS(status), NULL);
-		}
+		if (waitpid(pids[i], &pids[i], 0)
+			&& WIFEXITED(pids[i]) && WEXITSTATUS(pids[i]) > status)
+			status = WEXITSTATUS(pids[i]);
 	}
-	return (free(pids), EXIT_SUCCESS);
+	free(pids);
+	return (status);
 }

@@ -38,12 +38,13 @@
 # define FORK_FAIL			4
 # define PIPE_FAIL			5
 # define DUP_FAIL			6
-# define EXECVE_FAIL		7
+# define EXECVE_FAIL		127
 # define WRITE_FAIL			8
 # define READ_FAIL			9
 # define TOO_FEW_ARGS		10
 # define WAIT_FAIL			11
 # define ARGS_FAIL			12
+# define CMD_FAIL			-1
 
 typedef struct s_cmd
 {
