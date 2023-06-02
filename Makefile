@@ -6,16 +6,14 @@
 #    By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/23 14:52:15 by mcutura           #+#    #+#              #
-#    Updated: 2023/05/30 19:01:47 by mcutura          ###   ########.fr        #
+#    Updated: 2023/06/02 19:29:25 by mcutura          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME := pipex
 #----- DIRECTORIES -----
-SRCDIR := srcs
-#OBJDIR := obj
-#BINDIR := bin
-INCDIR := includes
+SRCDIR := src
+INCDIR := inc
 LIBDIR := lib
 #----- ----------- -----
 FILES := $(addprefix $(SRCDIR)/, main.c pipex.c ft_getpaths.c ft_heredoc.c \
@@ -42,9 +40,9 @@ $(LIBFTPRINTF):
 	$(MAKE) -C $(LIBDIR) all
 
 $(HEADERS):
-	cp $(LIBDIR)/ft_printf.h $(INCDIR)/ft_printf.h
-	cp $(LIBDIR)/libft/libft.h $(INCDIR)/libft.h
-	cp $(LIBDIR)/get_next_line.h $(INCDIR)/get_next_line.h
+	ln $(LIBDIR)/libft/libft.h $(INCDIR)/libft.h
+	ln $(LIBDIR)/get_next_line.h $(INCDIR)/get_next_line.h
+	ln $(LIBDIR)/ft_printf.h $(INCDIR)/ft_printf.h
 
 clean:
 	$(RM) $(OBJS)
