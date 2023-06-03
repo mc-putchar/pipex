@@ -12,7 +12,6 @@
 
 #include "pipex.h"
 
-// should ft_strnstr be used here? 
 int	ft_getpaths(char *const *envp, char ***ppaths)
 {
 	char	**paths;
