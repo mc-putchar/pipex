@@ -30,7 +30,7 @@ int	ft_getpaths(char *const *envp, char ***ppaths)
 	paths = ft_split(path + 5, ':');
 	if (!paths)
 		return (1);
-	while (paths[i])
+	while (paths[i] && paths[i][ft_strlen(paths[i]) - 1] != '/')
 	{
 		path = ft_strjoin(paths[i], "/");
 		if (!path)
