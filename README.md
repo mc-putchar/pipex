@@ -13,11 +13,11 @@ It can also handle multiple pipes chained into a pipeline, as well as rudimentar
 ## Usage
 
 ```bash
-$> ./pipex file1 cmd1 cmd2 ... cmdn file2
+./pipex file1 cmd1 cmd2 ... cmdn file2
 ```
 Behaves like bash command:
 ```bash
-$> < file1 cmd1 | cmd2 ... | cmdn > file2
+< file1 cmd1 | cmd2 ... | cmdn > file2
 ```
   
 ### Heredoc
@@ -25,7 +25,7 @@ For reading from standard input, provide keyword **here_doc** or **<<** or **"-"
 As per requirements of the project, final output is **appended** to file, instead of overwriting it. 
 It also handles multiple pipes.
 ```bash
-$> ./pipex here_doc LIMITER cmd1 cmd2 ... cmdn file
+./pipex here_doc LIMITER cmd1 cmd2 ... cmdn file
 ```
 Behaves like: 
 ```bash
